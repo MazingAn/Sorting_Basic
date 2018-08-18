@@ -4,7 +4,7 @@
 
 排序算法对应的文件夹是 
 - sort-cpp :采用c++实现的排序算法
-- sort-java:采用java实现的排序算法
+- 基础排序算法$n^2$，可以参考我的博客--[这篇文章](https://mazingan.github.io/2018/06/28/%E7%AE%97%E6%B3%95%E5%9F%BA%E7%A1%80%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/)
 
 ### 第二部分：栈和队列
 Stack-Queue-java: 采用java实现的栈和队列
