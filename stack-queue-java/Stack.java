@@ -3,7 +3,7 @@
  * */
 import java.util.Iterator;
 
-public class Stack implements Iterator<Item> {
+public class Stack<Item> implements Iterator<Item> {
 
     private Item[] s;
     private int N = 0;
