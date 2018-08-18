@@ -1,13 +1,27 @@
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class Deque<Item> implements Iterable<Item> {
+/*
+* 一个两头出的列队，使用链表实现
+* first为最右边，last为最左边
+* 最早入队的放在last，最后入队的放在left
+* */
 
-    private int N = 0;
-    private Item[] s;
+public class
+Deque<Item> implements Iterable<Item> {
+
+    private Node first;
+    private Node last;
+    private int N;
+
+    private class Node {
+        private Item item;
+        private Node next;
+        private Node prev;
+    }
 
     public Deque() {
-        s = (Item[]) new Object[1];
+        N = 0;
     }
 
     public boolean isEmpty() {
@@ -18,46 +32,73 @@ public class Deque<Item> implements Iterable<Item> {
         return N;
     }
 
-    public void addFirst(Item item)throws IllegalArgumentException {
-        moveLeft();
-        if(N++ == s.length)
-            resize(s.length * 2);
-        s[0] = item;
+    public void addFirst(Item item) {
+        if(item == null)
+            throw new IllegalArgumentException();
+        Node oldFirst = first;
+        first = new Node();
+        first.item = item;
+        first.next = oldFirst;
+        if(last == null) last=first;
+        else oldFirst.prev = first;
+        N++;
     }
 
-    public void addLast(Item item) throws IllegalArgumentException {
-        if(N == s.length)
-            resize(s.length * 2);
-        s[N++] = item;
+    public void addLast(Item item) {
+        if(item == null)
+            throw new IllegalArgumentException();
+        Node oldLast = last;
+        last = new Node();
+        last.item = item;
+        last.prev = oldLast;
+        if(first == null) first = last;
+        else oldLast.next = last;
+        N++;
     }
 
-    public Item removeFirst() throws NoSuchElementException {
-        Item item = s[0];
-        moveRight();
-        if(N > 0 && N == s.length/4)
-            resize(s.length / 4);
+    public Item removeFirst() {
+        if (isEmpty())
+            throw new NoSuchElementException();
+        Item item = first.item;
+        if(N > 1){
+            first = first.next;
+            first.prev = null;
+        }else{
+            first = last = null;
+        }
         N--;
         return item;
     }
 
-    public Item removeLast() throws NoSuchElementException {
-        Item item = s[--N];
-        if(N > 0 && N == s.length/4)
-            resize(s.length / 4);
-        s[N] = null;
+    public Item removeLast() {
+        if(isEmpty())
+            throw new NoSuchElementException();
+        Item item = last.item;
+        if(N > 1){
+            last = last.prev;
+            last.next = null;
+        }else{
+            last = first = null;
+        }
+        N--;
         return item;
     }
 
-    public Iterator<Item> iterator(){
+    public Iterator<Item> iterator() {
        return new Iterator<Item>() {
+           private Node current = first;
            @Override
            public boolean hasNext() {
-               return N > 0;
+               return current != null;
            }
 
            @Override
-           public Item next() throws NoSuchElementException{
-               return s[--N];
+           public Item next() {
+               if (current == null)
+                   throw new NoSuchElementException();
+               Item item = current.item;
+               current = current.next;
+               return item;
            }
 
            @Override
@@ -67,29 +108,6 @@ public class Deque<Item> implements Iterable<Item> {
        };
     }
 
-    private void resize(int size){
-        Item[] copy = (Item[])new Object[size];
-        for (int i = 0; i < N; i++)
-                copy[i] = s[i];
-        s = copy;
-    }
 
-    private void moveLeft(){
-        Item[] copy = (Item[])new Object[N+1];
-        for (int i = 0; i < N; i++)
-            copy[i+1] = s[i];
-        s = copy;
-    }
-
-
-    private void moveRight(){
-        Item[] copy = (Item[])new Object[N];
-        for (int i = 1; i < N; i++)
-            copy[i-1] = s[i];
-        s = copy;
-    }
-
-    public static void main(String[] args) {
-
-    }
+    public static void main(String[] args) { }
 }
